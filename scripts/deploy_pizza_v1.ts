@@ -21,7 +21,7 @@ const SLICES2 = 9;
 // }
 
 async function main() {
-  const contract = await ethers.getContractFactory("Pizza");
+  const contract = await ethers.getContractFactory("Pizza2");
   const pizzaContract = await contract.deploy();
   await pizzaContract.deployed();
   console.log("Pizza Contract Deployed At : ",pizzaContract.address);

@@ -2,10 +2,13 @@
 pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./IPizza.sol";
 
 contract PizzaFactory{
     address public pizzaAddress;
+
+    // mapping (address => uint) name;
 
     constructor(address _impl){
         pizzaAddress = _impl;
@@ -16,5 +19,8 @@ contract PizzaFactory{
         // pizza.initialize(_sliceCount);
         return address(pizza);
     }
-    // abi.encodeCall(SmartWallet(payable(address(0))).initialize, (_defaultAdmin, _name, _symbol, _contractURI, _trustedForwarders, _royaltyRecipient, _royaltyBps))
+
+    function upgrade(address proxy,address _newImpl) public {
+        IPizza(proxy).upgradeTo(_newImpl);
+    }
 }

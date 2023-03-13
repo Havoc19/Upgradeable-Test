@@ -15,4 +15,6 @@ interface IPizza{
     function initialize(uint256 _sliceCount) external ;
 
     function eatSlice() external ;
+
+    function upgradeTo(address newImplementation) external;
 }
