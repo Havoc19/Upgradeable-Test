@@ -2,10 +2,13 @@
 pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+// import "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol";
+import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "./IPizza.sol";
+import "../contracts/ProxyFactory.sol";
 
-contract PizzaFactory{
+contract PizzaFactory is ProxyFactory{
     address public pizzaAddress;
 
     // mapping (address => uint) name;
@@ -15,12 +18,10 @@ contract PizzaFactory{
     }
 
     function createPizza(uint _sliceCount)  public returns(address){
-        ERC1967Proxy pizza = new ERC1967Proxy(pizzaAddress,abi.encodeWithSelector(IPizza.initialize.selector,_sliceCount));
-        // pizza.initialize(_sliceCount);
-        return address(pizza);
-    }
+        address pizza = deployBeaconProxy(pizzaAddress,bytes(""));
 
-    function upgrade(address proxy,address _newImpl) public {
-        IPizza(proxy).upgradeTo(_newImpl);
+        // pizza.initialize(_sliceCount);
+        IPizza(pizza).initialize(_sliceCount);
+        return pizza;
     }
 }
